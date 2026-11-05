@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>D’migas ERP</title>
+<style>
+:root{--bg:#f6efe6;--sf:#fffdf9;--tx:#2e2420;--mu:#85766b;--bd:#e6d9c9;--br:#8a5230;--brd:#6b3d22;--sb:#3a2d27;--sbt:#e9dccd;--ok:#3f7d4e;--wa:#b5651d;--er:#b3382c;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1e1814;--sf:#2a211c;--tx:#f1e7da;--mu:#a89888;--bd:#42352d;--br:#c58455;--brd:#a96b3f;--sb:#150f0c;--sbt:#e0d2c1;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1e1814;--sf:#2a211c;--tx:#f1e7da;--mu:#a89888;--bd:#42352d;--br:#c58455;--brd:#a96b3f;--sb:#150f0c;--sbt:#e0d2c1;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+h1,h2,h3,.serif{font-family:Georgia,"Times New Roman",serif;margin:0}
+button{font:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--br);outline-offset:2px}
+.hide{display:none!important}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:34px;color:var(--brd)}.logo small{display:block;font:600 11px/1 "Segoe UI",sans-serif;letter-spacing:.2em;color:var(--mu)}
+/* login */
+#login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.lhero{background:linear-gradient(160deg,#5a3724,#8a5230);color:#f6efe6;padding:48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.lhero .logo{color:#fff}.lhero .logo small{color:#e3cdb6}.lhero h2{font-size:34px;line-height:1.15}.lhero li{list-style:none;margin:6px 0}.lhero li:before{content:"✓ ";color:#f2c999}.lhero ul{padding:0;margin:0}
+.lform{display:flex;align-items:center;justify-content:center;padding:32px}
+.lform form{width:100%;max-width:360px;display:grid;gap:14px}
+label{font-size:13px;color:var(--mu);display:grid;gap:4px}
+input{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--sf);color:var(--tx);font:inherit}
+.btn{background:var(--br);color:#fff;border:0;border-radius:8px;padding:11px 16px;font-weight:600}.btn:hover{background:var(--brd)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--br);border:1px solid var(--bd)}
+.err{color:var(--er);font-size:13px;min-height:18px}.hint{font-size:12px;color:var(--mu);background:var(--bg);padding:8px 10px;border-radius:8px}
+/* app */
+#app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+#nav{background:var(--sb);color:var(--sbt);padding:18px 12px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow:auto}
+#nav .logo{color:#f6efe6;font-size:26px;padding:0 8px 14px}#nav .logo small{color:#bba996}
+#nav button{background:none;border:0;color:inherit;text-align:left;padding:9px 10px;border-radius:8px;display:flex;gap:10px;align-items:center}
+#nav button:hover{background:rgba(255,255,255,.07)}#nav button.on{background:var(--br);color:#fff}#nav button.soon{opacity:.55}
+main{padding:20px 26px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.top .who{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mu)}
+.av{width:34px;height:34px;border-radius:50%;background:var(--br);color:#fff;display:grid;place-items:center;font-weight:700}
+#helpBtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--br);background:var(--sf);color:var(--br);font-weight:700;font-size:17px}#helpBtn:hover{background:var(--br);color:#fff}
+.grid{display:grid;gap:14px}.k4{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:2fr 1fr}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.kpi b{display:block;font:700 26px Georgia,serif;margin-top:2px}.kpi span{color:var(--mu);font-size:13px}
+.bars{display:flex;align-items:flex-end;gap:5px;height:140px;margin-top:10px}.bars div{flex:1;background:var(--br);border-radius:4px 4px 0 0;min-height:2px;position:relative}.bars div i{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--mu);font-style:normal}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}.row:last-child{border:0}
+.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--bg)}.tag.w{color:var(--wa)}.tag.e{color:var(--er)}
+.empty{color:var(--mu);font-size:14px;padding:10px 0}
+/* pos */
+.pos{display:grid;grid-template-columns:1fr 340px;gap:14px;align-items:start}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.p{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:left;color:var(--tx)}.p:hover:not(:disabled){border-color:var(--br)}.p:disabled{opacity:.45}
+.p .e{font-size:30px}.p b{display:block}.p small{color:var(--mu)}
+.line{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.q{display:flex;align-items:center;gap:6px}.q button{width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--tx)}
+.tot{display:grid;gap:4px;margin:12px 0;font-size:14px}.tot .big{font:700 22px Georgia,serif;display:flex;justify-content:space-between}
+.pay{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.pay button{padding:8px 2px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:8px;font-size:13px}.pay button.on{background:var(--br);color:#fff;border-color:var(--br)}
+.prn{margin-bottom:10px;font-size:13px;color:var(--mu)}
+#rm{position:fixed;inset:0;background:rgba(20,12,8,.6);z-index:70;display:grid;place-items:center;padding:16px}
+#rb{background:#fff;color:#000;width:300px;max-height:80vh;overflow:auto;border-radius:10px;padding:16px;font:13px/1.4 "Courier New",monospace}
+#rb .c{text-align:center}#rb hr{border:0;border-top:1px dashed #000}#rb .r{display:flex;justify-content:space-between;gap:8px}
+@media print{body>*:not(#rm){display:none!important}#rm{position:static;background:none;padding:0;display:block}#rb{width:72mm;border-radius:0;padding:0;max-height:none;overflow:visible}.noprint{display:none!important}}
+select{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--sf);color:var(--tx);font:inherit}
+.fill{display:block;width:100%;text-align:left;background:none;border:0;color:var(--br);padding:4px 0;font-size:12px;text-decoration:underline}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-weight:600}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 18px;border-radius:10px;z-index:60}
+/* tutorial */
+#tut{position:fixed;inset:0;z-index:50}
+#spot{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(20,12,8,.68);transition:all .25s}
+#tcard{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(440px,92vw);background:var(--sf);color:var(--tx);border-radius:14px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+#tcard h3{font-size:19px;margin-bottom:6px}#tcard p{margin:0 0 14px;color:var(--mu)}
+#tcard .nv{display:flex;align-items:center;justify-content:space-between;gap:8px}
+@media(max-width:860px){#login{grid-template-columns:1fr}.lhero{display:none}#app{grid-template-columns:1fr}#nav{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:8px}#nav .logo{display:none}#nav button{white-space:nowrap}.k4{grid-template-columns:1fr 1fr}.two,.pos{grid-template-columns:1fr}main{padding:14px}}
+@media(prefers-reduced-motion:reduce){#spot{transition:none}}
+</style></head><body>
+
+<section id="login">
+ <div class="lhero"><div class="logo">D’migas<small>EMPORIO SPA</small></div>
+  <h2>Tu negocio, en un solo lugar</h2>
+  <ul><li>Ventas</li><li>Inventario</li><li>Finanzas</li><li>Reportes</li></ul></div>
+ <div class="lform"><form id="lf" autocomplete="off">
+  <h1>Bienvenido(a)</h1><div style="color:var(--mu);margin-top:-8px">Ingresa a D’migas ERP</div>
+  <label>Correo electrónico<input id="em" type="email" value="" placeholder="usuario@dmigas.cl" required></label>
+  <label>Contraseña<input id="pw" type="password" required></label>
+  <div class="err" id="le" role="alert"></div>
+  <button class="btn" type="submit">Ingresar</button>
+  <div class="hint"><b>Cuentas de prueba</b> (toca una para completar los datos)<button type="button" class="fill" data-e="admin@dmigas.cl" data-p="dmigas2026">Administrador · admin@dmigas.cl · dmigas2026</button><button type="button" class="fill" data-e="camila@dmigas.cl" data-p="camila2026">Empleada · camila@dmigas.cl · camila2026</button><button type="button" class="fill" data-e="diego@dmigas.cl" data-p="diego2026">Empleado · diego@dmigas.cl · diego2026</button>Solo para esta maqueta; el inicio de sesión real llegará con el servidor.</div>
+ </form></div>
+</section>
+
+<section id="app" class="hide">
+ <nav id="nav" aria-label="Menú principal"><div class="logo">D’migas<small>EMPORIO SPA</small></div></nav>
+ <main>
+  <div class="top"><h1 id="vt">Dashboard</h1>
+   <div class="who"><span id="today"></span><div class="av" id="av">MP</div><span id="wn">Mario Pérez<br>Administrador</span>
+   <button id="helpBtn" aria-label="Ayuda: ver tutorial" title="Ver tutorial">?</button>
+   <button class="btn ghost" id="out">Salir</button></div></div>
+
+  <div id="v-dash">
+   <div class="grid k4" id="kpis">
+    <div class="card kpi"><span>Ventas del día</span><b id="k1">$0</b></div>
+    <div class="card kpi"><span>Transacciones</span><b id="k2">0</b></div>
+    <div class="card kpi"><span>Ticket promedio</span><b id="k3">$0</b></div>
+    <div class="card kpi"><span>Margen bruto</span><b id="k4">—</b></div>
+   </div>
+   <div class="grid two" style="margin-top:14px">
+    <div class="card"><h3>Ventas por hora</h3><div class="bars" id="bars"></div><div style="height:18px"></div></div>
+    <div class="card" id="alerts"><h3>Alertas</h3><div id="al"></div></div>
+   </div>
+   <div class="grid two" style="margin-top:14px">
+    <div class="card"><h3>Productos más vendidos</h3><div id="top"></div></div>
+    <div class="card"><h3>Últimas ventas</h3><div id="last"></div><button class="btn ghost" id="reset" style="margin-top:10px">Restablecer datos de prueba</button></div>
+   </div>
+  </div>
+
+  <div id="v-pos" class="hide">
+   <div class="pos">
+    <div class="card"><div id="mine" class="hint hide" style="margin-bottom:10px"></div><input id="q" placeholder="Buscar producto por nombre o código" aria-label="Buscar producto"><div class="prods" id="prods"></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Venta en proceso</h3><button class="btn ghost" id="clr" style="padding:4px 10px;font-size:13px">Vaciar</button></div><div id="cart"></div>
+     <div class="tot"><div style="display:flex;justify-content:space-between"><span>Neto</span><span id="tn">$0</span></div><div style="display:flex;justify-content:space-between"><span>IVA (19%)</span><span id="ti">$0</span></div><div class="big"><span>Total</span><span id="tt">$0</span></div></div>
+     <div class="pay" id="pay"></div>
+     <div id="cashbox" class="hide" style="margin-bottom:10px"><label>Monto recibido<input id="rec" type="number" min="0" inputmode="numeric" placeholder="Ej. 20000"></label><div id="chg" style="font-size:14px;margin-top:4px"></div></div>
+     <div class="prn"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="hasPrn" style="width:auto"> Hay impresora de boletas conectada</label><div id="rcpt" class="hide pay" style="grid-template-columns:1fr 1fr;margin:8px 0 0"><button data-r="1">Entregar boleta</button><button data-r="0">No entregar</button></div></div>
+     <button class="btn" id="cobrar" style="width:100%" disabled>Cobrar $0</button></div>
+   </div>
+  </div>
+
+  <div id="v-log" class="hide"><div class="grid k4" id="emps"></div><div class="card" style="margin-top:14px"><h3>Registro de ventas</h3><div style="overflow-x:auto"><table id="lt"></table></div></div></div>
+  <div id="v-cierre" class="hide"><div class="grid two"><div class="card" id="cierrebox"><h3>Cerrar día</h3><p style="color:var(--mu);margin:6px 0 12px;font-size:14px">Al terminar tu turno, cuenta el efectivo, anótalo y cierra el día. Tus ventas quedan registradas con tu nombre.</p><div id="ms"></div><div class="grid" style="grid-template-columns:1fr 1fr;margin-top:12px"><label>Fondo inicial en caja<input id="mf" type="number" min="0" value="0"></label><label>Efectivo contado<input id="mc" type="number" min="0" placeholder="Cuenta y anota"></label></div><div id="md" style="margin:8px 0;font-size:14px"></div><button class="btn" id="mclose" style="width:100%">Cerrar día</button></div><div class="card"><h3>Mis cierres anteriores</h3><div style="overflow-x:auto"><table id="mh"></table></div></div></div></div>
+  <div id="v-caja" class="hide">
+   <div class="grid two">
+    <div class="card"><h3>Cierre de caja</h3>
+     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:10px"><label>Empleado<select id="ce"></select></label><label>Fondo inicial en caja<input id="cf" type="number" min="0" value="0"></label></div>
+     <div id="cs" style="margin:12px 0"></div>
+     <label>Efectivo contado<input id="cc" type="number" min="0" placeholder="Cuenta el efectivo y anótalo"></label>
+     <div id="cd" style="margin:8px 0;font-size:14px"></div>
+     <button class="btn" id="cclose">Cerrar caja</button></div>
+    <div class="card"><h3>Tarjetas por abonar</h3><div id="cp" style="margin:10px 0"></div><button class="btn ghost" id="cab">Marcar como abonadas hoy</button><div class="hint" style="margin-top:10px">Una venta con tarjeta entra al libro de caja cuando el banco abona, no el día de la venta. Las comisiones del POS se registran como egreso.</div></div>
+   </div>
+   <div class="card" style="margin-top:14px"><h3>Historial de cierres</h3><div style="overflow-x:auto"><table id="ch"></table></div></div>
+   <div class="card" style="margin-top:14px"><h3>Libro de caja</h3>
+    <div class="hint" style="margin:8px 0 12px">Estructura según la Res. Ex. SII N° 14 de 2021 (Anexo 4), para regímenes Pro Pyme. Es un borrador para tu contador, no un libro autorizado por el SII. Los ingresos usan el comprobante interno hasta que haya boleta electrónica.</div>
+    <div class="grid k4"><label>Mes<input id="lm" type="month"></label><label>Saldo inicial del libro<input id="lo" type="number" min="0" value="0"></label><label>RUT de la empresa<input id="lr" placeholder="76.123.456-7"></label></div>
+    <details style="margin:12px 0"><summary style="cursor:pointer;color:var(--br)">Registrar egreso (compra, gasto, comisión)</summary>
+     <div class="grid k4" style="margin-top:10px"><label>Fecha<input id="xf" type="date"></label><label>Tipo de documento<input id="xt" placeholder="Factura"></label><label>N° documento<input id="xn"></label><label>RUT emisor<input id="xr" placeholder="12.345.678-9"></label><label>Glosa<input id="xg" placeholder="Compra de pasteles"></label><label>Monto total pagado<input id="xm" type="number" min="0"></label><label>Monto que afecta la base<input id="xb" type="number" min="0" placeholder="Neto, sin IVA"></label><label>&nbsp;<button class="btn" id="xadd" type="button">Agregar egreso</button></label></div></details>
+    <div style="overflow-x:auto"><table id="lb"></table></div>
+    <div class="hint" style="margin-top:10px">Las instrucciones del SII indican registrar con signo negativo la diferencia cuando los ingresos superan a los egresos. Aquí se muestra el cálculo directo (ingresos menos egresos); confirma ese criterio con tu contador.</div>
+    <div style="margin-top:12px"><button class="btn" id="ldl">Descargar CSV</button></div></div>
+  </div>
+  <div id="v-soon" class="hide"><div class="card"><h3 id="sn"></h3><p class="empty">Este módulo está en el plan del MVP y todavía no se construye. Empezamos por ventas y panel.</p></div></div>
+ </main>
+</section>
+
+<div id="tut" class="hide"><div id="spot"></div>
+ <div id="tcard" role="dialog" aria-live="polite"><h3 id="tt1"></h3><p id="td"></p>
+  <div class="nv"><button class="btn ghost" id="tskip">Omitir</button><span id="tn1" style="color:var(--mu);font-size:13px"></span><span><button class="btn ghost" id="tprev">Atrás</button> <button class="btn" id="tnext">Siguiente</button></span></div></div></div>
+<div id="rm" class="hide"><div><div id="rb"></div><div class="noprint" style="display:flex;gap:8px;margin-top:10px;justify-content:center"><button class="btn" id="rprint">Imprimir</button><button class="btn ghost" id="rclose" style="background:var(--sf)">Cerrar</button></div></div></div>
+<div class="toast hide" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const clp=n=>new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n);
+const CAT=[
+ {id:'PT-001',n:'Torta tres leches',e:'🍰',p:4500,c:2600,s:12,m:5},
+ {id:'PT-002',n:'Cheesecake',e:'🧁',p:4800,c:2800,s:8,m:5},
+ {id:'CR-001',n:'Croissant',e:'🥐',p:2000,c:900,s:35,m:20},
+ {id:'EM-001',n:'Empanada',e:'🥟',p:2500,c:1300,s:20,m:10},
+ {id:'SA-001',n:'Sándwich',e:'🥪',p:3500,c:1900,s:18,m:8},
+ {id:'CF-001',n:'Café Americano',e:'☕',p:2200,c:500,s:50,m:20},
+ {id:'CF-002',n:'Café Latte',e:'🥛',p:2800,c:800,s:40,m:20},
+ {id:'BD-001',n:'Bebida lata',e:'🥤',p:1500,c:800,s:60,m:20}];
+let st={stock:{},sales:[]};
+function load(){try{const r=localStorage.getItem('dmigas-erp-v1');if(r){st=JSON.parse(r);st.cfg=st.cfg||{printer:false};st.seq=st.seq||0;st.closes=st.closes||[];st.exp=st.exp||[];return}}catch(e){}reset(false)}
+function save(){try{localStorage.setItem('dmigas-erp-v1',JSON.stringify(st))}catch(e){}}
+function reset(r=true){st={stock:Object.fromEntries(CAT.map(p=>[p.id,p.s])),sales:[],seq:0,closes:[],exp:[],cfg:st.cfg||{printer:false}};cart={};if(r){save();renderAll()}}
+let cart={},method='Efectivo',busy=false,view='dash',giveR=true,me=null;
+const USERS=[{e:'admin@dmigas.cl',p:'dmigas2026',n:'Mario Pérez',r:'admin'},{e:'camila@dmigas.cl',p:'camila2026',n:'Camila Rojas',r:'emp'},{e:'diego@dmigas.cl',p:'diego2026',n:'Diego Soto',r:'emp'}];
+const NAVS=[['dash','🏠','Inicio'],['pos','🛒','Ventas (POS)'],['cierre','🔒','Cerrar día'],['log','🧾','Registro de ventas'],['Productos','📦'],['Inventario','🗃️'],['Compras','🚚'],['caja','💵','Caja y libro'],['Bancos','🏦'],['Contabilidad','📊'],['Reportes','📈'],['Personal','👥'],['Documentos','📄'],['Configuración','⚙️']];
+function buildNav(){$$('#nav button').forEach(b=>b.remove());$('#nav').insertAdjacentHTML('beforeend',NAVS.filter(x=>me.r==='admin'?x[0]!=='cierre':(x[0]==='pos'||x[0]==='cierre')).map(x=>x.length==3?`<button data-v="${x[0]}">${x[1]} ${x[2]}</button>`:`<button class="soon" data-v="soon" data-n="${x[0]}">${x[1]} ${x[0]}</button>`).join(''))}
+function go(v,n){if(me.r!=='admin'&&v!=='cierre')v='pos';view=v;['dash','pos','log','caja','cierre','soon'].forEach(k=>$('#v-'+k).classList.toggle('hide',k!==v));
+ $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v&&(v!=='soon'||b.dataset.n===n)));
+ $('#vt').textContent=v==='dash'?'Dashboard':v==='pos'?'Punto de venta':v==='log'?'Registro de ventas':v==='caja'?'Caja y libro de caja':v==='cierre'?'Cerrar día':n;if(v==='soon')$('#sn').textContent=n;renderAll()}
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.v,b.dataset.n)};
+/* login */
+$('#lf').onsubmit=e=>{e.preventDefault();
+ const u=USERS.find(x=>x.e===$('#em').value.trim().toLowerCase()&&x.p===$('#pw').value);if(u){me=u;
+  $('#le').textContent='';$('#login').classList.add('hide');$('#app').classList.remove('hide');$('#pw').value='';load();setupRole();startTut()}
+ else $('#le').textContent='Correo o contraseña incorrectos. Revisa los datos de prueba bajo el botón.'};
+$('#out').onclick=()=>{me=null;cart={};$('#rec').value='';$('#app').classList.add('hide');$('#login').classList.remove('hide');$('#tut').classList.add('hide')};
+$('#today').textContent=new Date().toLocaleDateString('es-CL',{day:'numeric',month:'short',year:'numeric'});
+/* pos */
+$('#pay').innerHTML=['Efectivo','Tarjeta','Transferencia','Mixto'].map(m=>`<button data-m="${m}">${m}</button>`).join('');
+$('#pay').onclick=e=>{const b=e.target.closest('button');if(b){method=b.dataset.m;renderPos()}};
+$('#q').oninput=renderPos;$('#rec').oninput=renderPos;
+$('#clr').onclick=()=>{cart={};$('#rec').value='';renderPos()};
+$('#hasPrn').onchange=e=>{st.cfg.printer=e.target.checked;save();renderPos()};
+$('#rcpt').onclick=e=>{const b=e.target.closest('button');if(b){giveR=b.dataset.r==='1';renderPos()}};
+$('#last').onclick=e=>{const b=e.target.closest('[data-rp]');if(b){const s=st.sales.find(x=>x.id===b.dataset.rp);if(s)showRcpt(s)}};
+$('#prods').onclick=e=>{const b=e.target.closest('.p');if(!b)return;const id=b.dataset.id;if((cart[id]||0)<st.stock[id]){cart[id]=(cart[id]||0)+1;renderPos()}};
+$('#cart').onclick=e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.id,d=+b.dataset.d;
+ if(d===0)delete cart[id];else{const n=(cart[id]||0)+d;if(n<=0)delete cart[id];else if(n<=st.stock[id])cart[id]=n}renderPos()};
+const total=()=>Object.entries(cart).reduce((a,[id,q])=>a+CAT.find(p=>p.id===id).p*q,0);
+function renderPos(){
+ const mm=st.sales.filter(s=>s.empId===me.e&&new Date(s.at).toDateString()===new Date().toDateString());$('#mine').classList.toggle('hide',me.r==='admin');$('#mine').textContent='Tus ventas de hoy: '+mm.length+' · '+clp(mm.reduce((a,s)=>a+s.total,0));
+ const q=$('#q').value.toLowerCase();
+ $('#prods').innerHTML=CAT.filter(p=>(p.n+p.id).toLowerCase().includes(q)).map(p=>{const left=st.stock[p.id]-(cart[p.id]||0);
+  return `<button class="p" data-id="${p.id}" ${left<=0?'disabled':''}><span class="e">${p.e}</span><b>${p.n}</b>${clp(p.p)}<br><small>${left<=0?'Sin stock':'Stock: '+left}</small></button>`}).join('')||'<div class="empty">No hay productos con ese nombre.</div>';
+ const ids=Object.keys(cart);
+ $('#cart').innerHTML=ids.length?ids.map(id=>{const p=CAT.find(x=>x.id===id),n=cart[id];return `<div class="line"><span>${p.n}<br><small style="color:var(--mu)">${clp(p.p)} c/u</small></span><span class="q"><button data-id="${id}" data-d="-1" aria-label="Quitar uno">−</button>${n}<button data-id="${id}" data-d="1" aria-label="Agregar uno">+</button></span><span>${clp(p.p*n)} <button data-id="${id}" data-d="0" aria-label="Eliminar" style="border:0;background:none;color:var(--er)">✕</button></span></div>`}).join(''):'<div class="empty">Toca un producto para agregarlo a la venta.</div>';
+ const t=total(),net=Math.round(t/1.19);$('#tn').textContent=clp(net);$('#ti').textContent=clp(t-net);$('#tt').textContent=clp(t);
+ $$('#pay button').forEach(b=>b.classList.toggle('on',b.dataset.m===method));
+ $('#cashbox').classList.toggle('hide',method!=='Efectivo'||!t);const rc=+$('#rec').value||0;$('#chg').innerHTML=rc?(rc>=t?'Vuelto: <b>'+clp(rc-t)+'</b>':'<span style="color:var(--er)">Faltan '+clp(t-rc)+'</span>'):'';
+ $('#hasPrn').checked=!!st.cfg.printer;$('#rcpt').classList.toggle('hide',!st.cfg.printer);$$('#rcpt button').forEach(b=>b.classList.toggle('on',(b.dataset.r==='1')===giveR));
+ $('#cobrar').textContent='Cobrar '+clp(t);$('#cobrar').disabled=!t||busy}
+$('#cobrar').onclick=()=>{
+ if(busy||!total())return;if(method==='Efectivo'&&+$('#rec').value&&+$('#rec').value<total()){toast('El monto recibido es menor al total',true);return}busy=true;
+ for(const[id,q]of Object.entries(cart))if(q>st.stock[id]){busy=false;toast('Stock insuficiente en '+CAT.find(p=>p.id===id).n,true);return}
+ const items=Object.entries(cart).map(([id,q])=>{const p=CAT.find(x=>x.id===id);st.stock[id]-=q;return{id,n:p.n,q,p:p.p,c:p.c}});
+ const t=total(),rc=+$('#rec').value||0,gv=!!(st.cfg.printer&&giveR);const sale={id:'V-'+Date.now(),no:++st.seq,at:Date.now(),items,total:t,method,receipt:gv,prn:!!st.cfg.printer,emp:me.n,empId:me.e,paid:method==='Efectivo'&&rc?rc:null};st.sales.push(sale);
+ save();cart={};$('#rec').value='';busy=false;renderAll();toast('Venta registrada: '+clp(t)+' ('+method+')'+(gv?'':st.cfg.printer?' · sin boleta':''));if(gv)showRcpt(sale)};
+function toast(m,bad){const t=$('#toast');t.textContent=m;t.style.background=bad?'var(--er)':'var(--ok)';t.classList.remove('hide');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.add('hide'),2600)}
+function showRcpt(s){const f=n=>clp(n),net=Math.round(s.total/1.19);
+ $('#rb').innerHTML=`<div class="c"><b>D’migas Emporio SpA</b><br>Comprobante de venta N° ${String(s.no||0).padStart(6,'0')}<br>${s.emp?'Atendió: '+s.emp+'<br>':''}${new Date(s.at).toLocaleString('es-CL')}</div><hr>`+s.items.map(i=>`<div>${i.n}</div><div class="r"><span>${i.q} x ${f(i.p)}</span><span>${f(i.q*i.p)}</span></div>`).join('')+`<hr><div class="r"><span>Neto</span><span>${f(net)}</span></div><div class="r"><span>IVA 19%</span><span>${f(s.total-net)}</span></div><div class="r"><b>TOTAL</b><b>${f(s.total)}</b></div><div class="r"><span>Pago</span><span>${s.method}</span></div>`+(s.paid?`<div class="r"><span>Recibido</span><span>${f(s.paid)}</span></div><div class="r"><span>Vuelto</span><span>${f(s.paid-s.total)}</span></div>`:'')+`<hr><div class="c">Documento interno.<br>No es boleta electrónica del SII.<br>¡Gracias por su compra!</div>`;
+ $('#rm').classList.remove('hide')}
+$('#rclose').onclick=()=>$('#rm').classList.add('hide');
+$('#rprint').onclick=()=>{try{window.print()}catch(e){alert('No se pudo abrir la impresión desde esta vista. Abre la página en una pestaña completa.')}};
+function setupRole(){buildNav();$('#av').textContent=me.n.split(' ').map(w=>w[0]).join('');$('#wn').innerHTML=me.n+'<br>'+(me.r==='admin'?'Administrador':'Empleado');go('dash')}
+$('.hint').onclick=e=>{const b=e.target.closest('.fill');if(b){$('#em').value=b.dataset.e;$('#pw').value=b.dataset.p}};
+function renderLog(){
+ const E={};USERS.forEach(u=>E[u.n]={q:0,t:0,b:0});
+ st.sales.forEach(s=>{const k=s.emp||'Sin registro';E[k]=E[k]||{q:0,t:0,b:0};E[k].q++;E[k].t+=s.total;if(s.receipt)E[k].b++});
+ $('#emps').innerHTML=Object.entries(E).map(([k,v])=>`<div class="card kpi"><span>${k}</span><b>${clp(v.t)}</b><span>${v.q} ventas · ${v.b} con boleta</span></div>`).join('');
+ $('#lt').innerHTML=st.sales.length?'<tr><th>N°</th><th>Fecha y hora</th><th>Empleado</th><th>Medio</th><th>Boleta</th><th>Total</th><th></th></tr>'+st.sales.slice().reverse().map(s=>`<tr><td>${String(s.no||0).padStart(6,'0')}</td><td>${new Date(s.at).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'})}</td><td>${s.emp||'—'}</td><td>${s.method}</td><td>${s.receipt?'Entregada':s.prn?'No entregada':'Sin impresora'}</td><td>${clp(s.total)}</td><td><button class="btn ghost" data-rp="${s.id}" style="padding:2px 8px;font-size:12px">Comprobante</button></td></tr>`).join(''):'<tr><td class="empty">Aún no hay ventas. Cierra sesión, entra como empleado y registra una.</td></tr>'}
+$('#v-log').onclick=e=>{const b=e.target.closest('[data-rp]');if(b){const s=st.sales.find(x=>x.id===b.dataset.rp);if(s)showRcpt(s)}};
+const isCash=m=>m==='Efectivo'||m==='Mixto',fd=ms=>{const d=new Date(ms),p=n=>String(n).padStart(2,'0');return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()};
+function libroData(){
+ const mo=$('#lm').value,inM=ms=>{const d=new Date(ms);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')===mo},R=[],rut=$('#lr').value.trim()||'—';
+ if(mo)R.push({t:0,doc:'—',td:'—',rut:'—',at:new Date(mo+'-01T00:00:00').getTime(),g:'Saldo inicial',m:+$('#lo').value||0,b:0});
+ st.sales.forEach(s=>{const at=s.method==='Tarjeta'?s.abono:s.at;if(at&&inM(at))R.push({t:1,doc:String(s.no||0).padStart(6,'0'),td:'Comprobante interno',rut,at,g:'Venta afecta a IVA ('+s.method+(s.method==='Tarjeta'?', abono POS':'')+')',m:s.total,b:Math.round(s.total/1.19)})});
+ st.exp.forEach(x=>{if(inM(x.at))R.push({t:2,doc:x.doc||'—',td:x.td||'—',rut:x.rut||'—',at:x.at,g:x.g,m:x.m,b:x.b})});
+ R.sort((a,b)=>a.at-b.at||a.t-b.t);R.forEach((r,i)=>r.n=i+1);
+ const S=(t,k)=>R.filter(r=>t.includes(r.t)).reduce((a,r)=>a+r[k],0),c10=S([0,1],'m'),c11=S([2],'m'),c13=S([1],'b'),c14=S([2],'b');
+ return{mo,R,c10,c11,c12:c10-c11,c13,c14,c15:c13-c14}}
+function renderCaja(){
+ const sel=$('#ce');if(!sel.options.length)sel.innerHTML=USERS.map(u=>`<option value="${u.e}">${u.n}</option>`).join('');
+ const U=sel.value,P=st.sales.filter(s=>s.empId===U&&!s.cierre),sm=f=>P.filter(s=>f(s.method)).reduce((a,s)=>a+s.total,0),ef=sm(isCash),ta=sm(m=>m==='Tarjeta'),tr=sm(m=>m==='Transferencia'),esp=(+$('#cf').value||0)+ef;
+ $('#cs').innerHTML=`<div class="row"><span>Ventas sin cerrar</span><span>${P.length}</span></div><div class="row"><span>Efectivo (incluye pagos mixtos)</span><span>${clp(ef)}</span></div><div class="row"><span>Tarjeta</span><span>${clp(ta)}</span></div><div class="row"><span>Transferencia</span><span>${clp(tr)}</span></div><div class="row"><b>Efectivo esperado en caja</b><b>${clp(esp)}</b></div>`;
+ const cc=$('#cc').value,d=+cc-esp;
+ $('#cd').innerHTML=cc===''?'':d===0?'<span style="color:var(--ok)">Caja cuadrada</span>':`Diferencia: <b style="color:var(--er)">${clp(d)}</b> (${d>0?'sobra':'falta'} efectivo)`;
+ $('#cclose').disabled=!P.length||cc==='';
+ $('#ch').innerHTML=st.closes.length?'<tr><th>N°</th><th>Fecha</th><th>Empleado</th><th>Esperado</th><th>Contado</th><th>Diferencia</th></tr>'+st.closes.slice().reverse().map(c=>`<tr><td>${c.no}</td><td>${new Date(c.at).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'})}</td><td>${c.emp}</td><td>${clp(c.esp)}</td><td>${clp(c.cnt)}</td><td>${clp(c.cnt-c.esp)}</td></tr>`).join(''):'<tr><td class="empty">Aún no hay cierres de caja.</td></tr>';
+ const TP=st.sales.filter(s=>s.method==='Tarjeta'&&!s.abono);
+ $('#cp').innerHTML=TP.length?`${TP.length} ventas · <b>${clp(TP.reduce((a,s)=>a+s.total,0))}</b> pendientes de abono`:'<span class="empty">No hay tarjetas por abonar.</span>';$('#cab').disabled=!TP.length;
+ if(!$('#lm').value){const t=new Date();$('#lm').value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')}
+ if(!$('#xf').value)$('#xf').valueAsDate=new Date();
+ const L=libroData();
+ $('#lb').innerHTML='<tr><th>C1 N°</th><th>C2 Tipo op.</th><th>C3 N° doc.</th><th>C4 Tipo doc.</th><th>C5 RUT emisor</th><th>C6 Fecha</th><th>C7 Glosa</th><th>C8 Monto total</th><th>C9 Afecta base</th></tr>'+L.R.map(r=>`<tr><td>${r.n}</td><td>${r.t}</td><td>${r.doc}</td><td>${r.td}</td><td>${r.rut}</td><td>${fd(r.at)}</td><td>${r.g}</td><td>${clp(r.m)}</td><td>${clp(r.b)}</td></tr>`).join('')+`<tr><th colspan="7">Totales del mes</th><th>C10 Ingresos ${clp(L.c10)}<br>C11 Egresos ${clp(L.c11)}<br>C12 Saldo ${clp(L.c12)}</th><th>C13 Ingresos ${clp(L.c13)}<br>C14 Egresos ${clp(L.c14)}<br>C15 Resultado ${clp(L.c15)}</th></tr>`}
+$('#ce').onchange=$('#cf').oninput=$('#cc').oninput=$('#lm').onchange=$('#lo').oninput=$('#lr').oninput=renderCaja;
+$('#cclose').onclick=()=>{const U=$('#ce').value,u=USERS.find(x=>x.e===U),P=st.sales.filter(s=>s.empId===U&&!s.cierre),fo=+$('#cf').value||0,ef=P.filter(s=>isCash(s.method)).reduce((a,s)=>a+s.total,0),no=st.closes.length+1;
+ st.closes.push({no,at:Date.now(),emp:u.n,empId:U,fondo:fo,esp:fo+ef,cnt:+$('#cc').value,n:P.length});P.forEach(s=>s.cierre=no);save();$('#cc').value='';toast('Caja cerrada · cierre N° '+no);renderCaja()};
+$('#cab').onclick=()=>{st.sales.filter(s=>s.method==='Tarjeta'&&!s.abono).forEach(s=>s.abono=Date.now());save();toast('Abonos de tarjeta registrados');renderCaja()};
+$('#xadd').onclick=()=>{const cl=v=>v.replace(/[<>&"]/g,'').trim(),m=+$('#xm').value,b=+$('#xb').value||0,g=cl($('#xg').value);
+ if(!$('#xf').value||!g||!(m>0)){toast('Completa fecha, glosa y monto total del egreso',true);return}
+ st.exp.push({at:new Date($('#xf').value+'T12:00:00').getTime(),td:cl($('#xt').value),doc:cl($('#xn').value),rut:cl($('#xr').value),g,m,b:Math.min(b,m)});save();['xt','xn','xr','xg','xm','xb'].forEach(i=>$('#'+i).value='');toast('Egreso agregado');renderCaja()};
+$('#ldl').onclick=async()=>{const L=libroData(),q=v=>'"'+String(v).replace(/"/g,'""')+'"',row=a=>a.map(q).join(';');
+ const csv=[row(['C1 N° Correlativo','C2 Tipo de Operación','C3 N° Documento','C4 Tipo Documento','C5 RUT Emisor','C6 Fecha de la Operación','C7 Glosa de operación','C8 Monto total flujo de ingreso o egreso','C9 Monto que afecta la base imponible'])].concat(L.R.map(r=>row([r.n,r.t,r.doc,r.td,r.rut,fd(r.at),r.g,r.m,r.b])),[row([]),row(['C10 Total monto flujo de ingresos',L.c10]),row(['C11 Total monto flujo de egresos',L.c11]),row(['C12 Saldo flujo de caja',L.c12]),row(['C13 Ingresos que afectan la base',L.c13]),row(['C14 Egresos que afectan la base',L.c14]),row(['C15 Resultado neto',L.c15])]).join('\r\n');
+ const dl=window.claude&&await window.claude.use('downloads').catch(()=>null);
+ if(!dl){toast('La descarga solo funciona abriendo la página desde claude.ai',true);return}
+ try{await dl.save({filename:'libro-de-caja-'+L.mo+'.csv',data:'\ufeff'+csv});toast('Libro de caja descargado')}catch(e){if(!e||e.code!=='declined')toast('No se pudo descargar ('+((e&&e.code)||'error')+')',true)}};
+function cierreCalc(U,fo){const P=st.sales.filter(s=>s.empId===U&&!s.cierre),sm=f=>P.filter(s=>f(s.method)).reduce((a,s)=>a+s.total,0),ef=sm(isCash);return{P,ef,ta:sm(m=>m==='Tarjeta'),tr:sm(m=>m==='Transferencia'),esp:fo+ef}}
+function renderCierre(){const C=cierreCalc(me.e,+$('#mf').value||0);
+ $('#ms').innerHTML=`<div class="row"><span>Ventas sin cerrar</span><span>${C.P.length}</span></div><div class="row"><span>Efectivo (incluye pagos mixtos)</span><span>${clp(C.ef)}</span></div><div class="row"><span>Tarjeta</span><span>${clp(C.ta)}</span></div><div class="row"><span>Transferencia</span><span>${clp(C.tr)}</span></div><div class="row"><b>Efectivo esperado en caja</b><b>${clp(C.esp)}</b></div>`;
+ const cc=$('#mc').value,d=+cc-C.esp;
+ $('#md').innerHTML=cc===''?'':d===0?'<span style="color:var(--ok)">Caja cuadrada</span>':`Diferencia: <b style="color:var(--er)">${clp(d)}</b> (${d>0?'sobra':'falta'} efectivo)`;
+ $('#mclose').disabled=!C.P.length||cc==='';
+ const mine=st.closes.filter(c=>c.empId===me.e);
+ $('#mh').innerHTML=mine.length?'<tr><th>N°</th><th>Fecha</th><th>Esperado</th><th>Contado</th><th>Diferencia</th></tr>'+mine.slice().reverse().map(c=>`<tr><td>${c.no}</td><td>${new Date(c.at).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'})}</td><td>${clp(c.esp)}</td><td>${clp(c.cnt)}</td><td>${clp(c.cnt-c.esp)}</td></tr>`).join(''):'<tr><td class="empty">Aún no has cerrado ningún día.</td></tr>'}
+$('#mf').oninput=$('#mc').oninput=renderCierre;
+$('#mclose').onclick=()=>{const fo=+$('#mf').value||0,C=cierreCalc(me.e,fo),no=st.closes.length+1;
+ st.closes.push({no,at:Date.now(),emp:me.n,empId:me.e,fondo:fo,esp:C.esp,cnt:+$('#mc').value,n:C.P.length});C.P.forEach(s=>s.cierre=no);save();$('#mc').value='';toast('Día cerrado · cierre N° '+no);renderCierre()};
+/* dashboard */
+function renderDash(){
+ const d=new Date().toDateString(),S=st.sales.filter(s=>new Date(s.at).toDateString()===d);
+ const T=S.reduce((a,s)=>a+s.total,0),n=S.length,net=T/1.19,cost=S.reduce((a,s)=>a+s.items.reduce((b,i)=>b+i.c*i.q,0),0);
+ $('#k1').textContent=clp(T);$('#k2').textContent=n;$('#k3').textContent=n?clp(Math.round(T/n)):'$0';$('#k4').textContent=n?Math.round((net-cost)/net*100)+'%':'—';
+ const H=[...Array(17)].map((_,i)=>6+i),by=H.map(h=>S.filter(s=>new Date(s.at).getHours()===h).reduce((a,s)=>a+s.total,0)),mx=Math.max(...by,1);
+ $('#bars').innerHTML=H.map((h,i)=>`<div style="height:${by[i]/mx*100}%" title="${h}:00 · ${clp(by[i])}">${h%2?'':`<i>${h}</i>`}</div>`).join('');
+ const low=CAT.filter(p=>st.stock[p.id]<=p.m);
+ $('#al').innerHTML=low.length?low.map(p=>`<div class="row"><span>${p.n}</span><span class="tag ${st.stock[p.id]==0?'e':'w'}">${st.stock[p.id]==0?'Agotado':'Stock bajo: '+st.stock[p.id]}</span></div>`).join(''):'<div class="empty">Sin alertas por ahora.</div>';
+ const m={};S.forEach(s=>s.items.forEach(i=>{m[i.n]=m[i.n]||{q:0,t:0};m[i.n].q+=i.q;m[i.n].t+=i.q*i.p}));
+ const tp=Object.entries(m).sort((a,b)=>b[1].q-a[1].q).slice(0,5);
+ $('#top').innerHTML=tp.length?tp.map(([k,v])=>`<div class="row"><span>${k}</span><span>${v.q} u. · ${clp(v.t)}</span></div>`).join(''):'<div class="empty">Aún no hay ventas hoy. Registra la primera en Ventas (POS).</div>';
+ $('#last').innerHTML=S.length?S.slice(-5).reverse().map(s=>`<div class="row"><span>${new Date(s.at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})} · ${s.method}${s.emp?' · '+s.emp.split(' ')[0]:''}</span><span>${clp(s.total)} <button class="btn ghost" data-rp="${s.id}" style="padding:2px 8px;font-size:12px">Comprobante</button></span></div>`).join(''):'<div class="empty">Sin movimientos todavía.</div>'}
+$('#reset').onclick=()=>{const b=$('#reset'),L='Restablecer datos de prueba';if(b.dataset.s!=='1'){b.dataset.s='1';b.textContent='Pulsa de nuevo para confirmar';b._t=setTimeout(()=>{b.dataset.s='';b.textContent=L},4000);return}clearTimeout(b._t);b.dataset.s='';b.textContent=L;reset(true);toast('Datos de prueba restablecidos')};
+function renderAll(){if(view==='dash')renderDash();if(view==='pos')renderPos();if(view==='log')renderLog();if(view==='caja')renderCaja();if(view==='cierre')renderCierre()}
+/* tutorial */
+const STEPS_A=[
+ {v:'dash',t:'Te damos la bienvenida a D’migas ERP',d:'En un minuto verás cómo moverte por el panel y cómo registrar tu primera venta.'},
+ {v:'dash',s:'#nav',t:'Menú principal',d:'Desde aquí accedes a cada módulo. Ya funcionan Inicio, Ventas, Registro de ventas y Caja y libro; el resto llegará por etapas.'},
+ {v:'dash',s:'#kpis',t:'Indicadores del día',d:'Ventas, transacciones, ticket promedio y margen se actualizan solos con cada venta que cobres.'},
+ {v:'dash',s:'#alerts',t:'Alertas',d:'Cuando un producto llega a su stock mínimo o se agota, aparece aquí para que repongas a tiempo.'},
+ {v:'pos',s:'#v-pos .pos',t:'Punto de venta',d:'Toca los productos para armar la venta, ajusta cantidades, elige el medio de pago y pulsa Cobrar. El stock baja una sola vez por venta. Si tienes impresora, actívala bajo el medio de pago y elige si entregas boleta. En efectivo, anota lo recibido y verás el vuelto.'},
+ {v:'log',s:'#emps',t:'Quién vendió cuánto',d:'En Registro de ventas ves el total de cada empleado y cuántas ventas hizo con boleta.'},
+ {v:'log',s:'#lt',t:'Registro con comprobantes',d:'Cada venta muestra empleado, medio de pago y boleta. Con el botón Comprobante la vuelves a ver.'},
+ {v:'caja',s:'#cp',t:'Tarjetas por abonar',d:'Las ventas con tarjeta cuentan en el libro cuando el banco abona. Márcalas aquí cuando llegue el dinero.'},
+ {v:'caja',s:'#ch',t:'Cierres de día',d:'Aquí quedan los cierres de cada empleado: lo esperado, lo contado y la diferencia. Los empleados cierran su día desde su propio perfil.'},
+ {v:'caja',s:'#lb',t:'Libro de caja',d:'Es el libro de caja con el formato del SII, para revisar con tu contador. Con Registrar egreso agregas compras y gastos.'},
+ {v:'caja',s:'#ldl',t:'Descargar el libro',d:'Descarga el libro del mes en CSV para dárselo a tu contador.'},
+ {v:'dash',s:'#helpBtn',t:'¿Necesitas repasar?',d:'Este botón ? abre el tutorial cuando quieras. ¡Listo para vender!'}];
+let ti=0,STEPS=[];const STEPS_E=[
+ {v:'pos',t:'Te damos la bienvenida a D’migas ERP',d:'Tu perfil tiene dos secciones: Ventas y Cerrar día. Todo queda registrado con tu nombre.'},
+ {v:'pos',s:'#prods',t:'Elige los productos',d:'Toca un producto para agregarlo. No podrás vender más unidades de las que hay en stock.'},
+ {v:'pos',s:'#pay',t:'Medio de pago',d:'Elige cómo paga el cliente. En efectivo, anota el monto recibido y verás el vuelto.'},
+ {v:'pos',s:'.prn',t:'Boleta',d:'Si hay impresora conectada, actívala y elige si entregas boleta antes de cobrar.'},
+ {v:'pos',s:'#mine',t:'Tus ventas de hoy',d:'Aquí ves cuántas ventas llevas hoy y cuánto has vendido.'},
+ {v:'cierre',s:'#nav button[data-v="cierre"]',t:'Cerrar día',d:'Cuando termines tu turno, entra aquí para cerrar tu caja.'},
+ {v:'cierre',s:'#cierrebox',t:'Cuenta tu efectivo',d:'Anota el efectivo que contaste. Verás si la caja cuadra, si sobra o si falta.'},
+ {v:'cierre',s:'#mclose',t:'Pulsa Cerrar día',d:'Este botón deja el día cerrado. Las ventas que hagas después quedarán para el siguiente cierre.'},
+ {v:'pos',s:'#helpBtn',t:'¿Necesitas repasar?',d:'El botón ? vuelve a abrir este tutorial cuando quieras.'}];
+function startTut(){STEPS=me.r==='admin'?STEPS_A:STEPS_E;ti=0;$('#tut').classList.remove('hide');showStep()}
+function showStep(){const s=STEPS[ti];go(s.v);$('#tt1').textContent=s.t;$('#td').textContent=s.d;$('#tn1').textContent=(ti+1)+' de '+STEPS.length;
+ $('#tprev').style.visibility=ti?'visible':'hidden';$('#tnext').textContent=ti==STEPS.length-1?'Empezar':'Siguiente';
+ const el=s.s&&$(s.s),sp=$('#spot');
+ if(!el){Object.assign(sp.style,{left:'50%',top:'40%',width:'0px',height:'0px'});return}
+ el.scrollIntoView({block:'center'});
+ setTimeout(()=>{const r=el.getBoundingClientRect();Object.assign(sp.style,{left:r.left-6+'px',top:r.top-6+'px',width:r.width+12+'px',height:r.height+12+'px'})},120)}
+$('#tnext').onclick=()=>{if(ti>=STEPS.length-1){endTut()}else{ti++;showStep()}};
+$('#tprev').onclick=()=>{if(ti>0){ti--;showStep()}};
+$('#tskip').onclick=endTut;
+function endTut(){$('#tut').classList.add('hide');go('dash')}
+$('#helpBtn').onclick=startTut;
+addEventListener('resize',()=>{if(!$('#tut').classList.contains('hide'))showStep()});
+document.addEventListener('keydown',e=>{if($('#tut').classList.contains('hide'))return;if(e.key==='Escape')endTut();if(e.key==='ArrowRight')$('#tnext').click();if(e.key==='ArrowLeft')$('#tprev').click()});
+</script></body></html>
